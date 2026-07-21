@@ -1,9 +1,6 @@
-"""Build a local FAISS index from PDFs placed in the data directory."""
 from __future__ import annotations
-
 import logging
 from pathlib import Path
-
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -17,7 +14,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 def load_pdfs(data_dir: Path) -> list:
-    """Load every readable PDF under *data_dir*, adding source metadata."""
     pdfs = sorted(data_dir.glob("*.pdf"))
     if not pdfs:
         raise FileNotFoundError(f"No PDF files found in {data_dir}. Add trusted medical PDFs first.")
@@ -37,7 +33,6 @@ def load_pdfs(data_dir: Path) -> list:
 
 
 def build_vectorstore() -> int:
-    """Create and save FAISS index; return the number of text chunks."""
     DATA_DIR.mkdir(exist_ok=True)
     documents = load_pdfs(DATA_DIR)
     splitter = RecursiveCharacterTextSplitter(

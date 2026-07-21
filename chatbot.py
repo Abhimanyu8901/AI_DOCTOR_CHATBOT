@@ -1,10 +1,6 @@
-"""Grounded Gemini response service."""
 from __future__ import annotations
-
 import logging
-
 from langchain_google_genai import ChatGoogleGenerativeAI
-
 from config import DISCLAIMER, GEMINI_MODEL, is_demo_mode_requested, load_environment
 from rag import NO_ANSWER, MedicalRetriever, RetrievedChunk, build_context, build_prompt
 
@@ -12,14 +8,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 class MedicalChatbot:
-    """Retrieves trusted content before every Gemini generation.
-
-    If no valid GOOGLE_API_KEY is configured (or DEMO_MODE=true is set in .env),
-    the bot automatically runs in demo mode: it still performs real FAISS
-    retrieval over the ingested PDFs, but instead of calling Gemini it returns
-    the top retrieved passage directly. This is handy for classroom demos or
-    offline runs where you don't want to use a real API key yet.
-    """
 
     def __init__(self) -> None:
         self.retriever = MedicalRetriever()
@@ -49,7 +37,6 @@ class MedicalChatbot:
         try:
             response = self.llm.invoke(build_prompt(question, context, conversation))
             answer = str(response.content).strip()
-            # A deterministic safeguard in addition to the prompt instruction.
             if "Medical disclaimer:" not in answer:
                 answer = f"{answer}\n\n{DISCLAIMER}"
             return answer, chunks

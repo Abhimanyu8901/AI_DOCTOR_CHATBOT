@@ -1,12 +1,8 @@
-"""Retrieval and prompt-building services for the medical chatbot."""
 from __future__ import annotations
-
 from dataclasses import dataclass
-
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
-
 from config import EMBEDDING_MODEL, TOP_K, VECTORSTORE_DIR
 
 NO_ANSWER = "I couldn't find reliable information about that in my medical knowledge base."
@@ -20,7 +16,6 @@ class RetrievedChunk:
 
 
 class MedicalRetriever:
-    """Loads a local FAISS store and performs similarity retrieval."""
 
     def __init__(self) -> None:
         if not (VECTORSTORE_DIR / "index.faiss").exists():
@@ -35,13 +30,11 @@ class MedicalRetriever:
         )
 
     def search(self, question: str, k: int = TOP_K) -> list[RetrievedChunk]:
-        """Return the top relevant chunks; scores are normalised to 0..1."""
         results = self.store.similarity_search_with_relevance_scores(question, k=k)
         return [RetrievedChunk(document=doc, relevance=float(score)) for doc, score in results]
 
 
 def build_context(chunks: list[RetrievedChunk]) -> str:
-    """Create a clearly sourced context block for the LLM."""
     blocks = []
     for index, chunk in enumerate(chunks, start=1):
         metadata = chunk.document.metadata
@@ -52,7 +45,6 @@ def build_context(chunks: list[RetrievedChunk]) -> str:
 
 
 def build_prompt(question: str, context: str, conversation: str = "") -> str:
-    """Construct a strict grounded-answer prompt."""
     return f"""You are an AI medical education assistant. Answer ONLY using the provided medical context.
 Never use outside knowledge, invent facts, diagnose, prescribe medicine, or recommend dosages.
 If the context does not directly support a reliable answer, reply exactly: {NO_ANSWER}

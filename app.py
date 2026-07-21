@@ -1,14 +1,9 @@
-"""Streamlit application for the AI Doctor Chatbot with RAG."""
 from __future__ import annotations
-
 import logging
-
 import streamlit as st
-
 from chatbot import MedicalChatbot
 from config import DISCLAIMER, HISTORY_DIR
 from utils.helper import clamp_confidence, history_download, write_history
-
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
@@ -17,20 +12,16 @@ FAQS = {
     "Can it diagnose me?": "No. It cannot diagnose conditions or replace a clinician.",
     "What should I do in an emergency?": "Contact local emergency services or seek urgent in-person medical care now.",
 }
-
-
 def initialise_state() -> None:
     """Set Streamlit session defaults."""
     st.session_state.setdefault("messages", [])
     st.session_state.setdefault("theme", "Light")
     st.session_state.setdefault("bot", None)
 
-
 @st.cache_resource(show_spinner=False)
 def create_bot() -> MedicalChatbot:
     """Build the singleton chatbot after validating its configuration."""
     return MedicalChatbot()
-
 
 def render_sources(sources: list) -> None:
     """Show cited evidence, confidence, and raw retrieved chunks."""

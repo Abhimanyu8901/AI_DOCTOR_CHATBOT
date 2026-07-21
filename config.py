@@ -1,6 +1,4 @@
-"""Application settings loaded from environment variables."""
 from __future__ import annotations
-
 import os
 from pathlib import Path
 
@@ -25,7 +23,6 @@ DISCLAIMER = (
 
 
 def load_environment() -> str:
-    """Load .env and return a validated Gemini API key."""
     load_dotenv(BASE_DIR / ".env")
     api_key = os.getenv("GOOGLE_API_KEY", "").strip()
     if not api_key:
