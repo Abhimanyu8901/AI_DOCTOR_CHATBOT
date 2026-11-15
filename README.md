@@ -1,4 +1,9 @@
 # AI Doctor Chatbot with RAG || [Live Link](https://ai-doctor-chatbott.streamlit.app/)
+
+An AI-powered medical education chatbot built using Retrieval-Augmented Generation (RAG). The application uses Groq API (Llama 3.3 70B) to generate context-aware responses based on information retrieved from medical PDF documents.
+
+It combines Large Language Models (LLMs), semantic search, and vector databases to provide educational answers grounded in a custom medical knowledge base.
+
 ## Folder structure
 
 AI_Doctor_Chatbot/
