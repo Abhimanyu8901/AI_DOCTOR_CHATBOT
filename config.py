@@ -10,7 +10,7 @@ VECTORSTORE_DIR = BASE_DIR / "vectorstore"
 HISTORY_DIR = BASE_DIR / "chat_history"
 ASSETS_DIR = BASE_DIR / "assets"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 CHUNK_SIZE = 900
 CHUNK_OVERLAP = 150
 TOP_K = 5
@@ -24,10 +24,11 @@ DISCLAIMER = (
 
 def load_environment() -> str:
     load_dotenv(BASE_DIR / ".env")
-    api_key = os.getenv("GOOGLE_API_KEY", "").strip()
+    api_key = os.getenv("GROQ_API_KEY", "").strip()
+
     if not api_key:
         raise ValueError(
-            "GOOGLE_API_KEY is missing. Copy .env.example to .env and add your key."
+            "GROQ_API_KEY is missing. Add your Groq API key."
         )
     return api_key
 
