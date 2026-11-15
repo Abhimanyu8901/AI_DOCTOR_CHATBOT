@@ -1,7 +1,7 @@
 from __future__ import annotations
 import logging
-from langchain_google_genai import ChatGoogleGenerativeAI
-from config import DISCLAIMER, GEMINI_MODEL, is_demo_mode_requested, load_environment
+from langchain_groq import ChatGroq
+from config import (DISCLAIMER, GROQ_MODEL, is_demo_mode_requested, load_environment)
 from rag import NO_ANSWER, MedicalRetriever, RetrievedChunk, build_context, build_prompt
 
 LOGGER = logging.getLogger(__name__)
@@ -21,8 +21,8 @@ class MedicalChatbot:
             self.demo_mode = True
             LOGGER.warning("Starting in demo mode (no live Gemini calls): %s", exc)
         if not self.demo_mode:
-            self.llm = ChatGoogleGenerativeAI(
-                model=GEMINI_MODEL, google_api_key=api_key, temperature=0,
+            self.llm = ChatGroq(
+                model=GROQ_MODEL, groq_api_key=api_key, temperature=0, max_retries=2,
             )
 
     def answer(self, question: str, history: list[dict[str, str]]) -> tuple[str, list[RetrievedChunk]]:
