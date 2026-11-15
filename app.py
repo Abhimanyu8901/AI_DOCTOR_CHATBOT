@@ -2,7 +2,8 @@ from __future__ import annotations
 import logging
 import streamlit as st
 from chatbot import MedicalChatbot
-from config import DISCLAIMER, HISTORY_DIR
+from config import DISCLAIMER, HISTORY_DIR, VECTORSTORE_DIR
+from ingest import build_vectorstore
 from utils.helper import clamp_confidence, history_download, write_history
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
@@ -20,7 +21,10 @@ def initialise_state() -> None:
 
 @st.cache_resource(show_spinner=False)
 def create_bot() -> MedicalChatbot:
-    """Build the singleton chatbot after validating its configuration."""
+    """Build the knowledge base if missing, then initialize the chatbot."""
+    if not (VECTORSTORE_DIR / "index.faiss").exists():
+        build_vectorstore()
+
     return MedicalChatbot()
 
 def render_sources(sources: list) -> None:
